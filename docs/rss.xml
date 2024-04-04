@@ -1,2 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>karond</title><link>https://karond-is-me.github.io/karond.github.io</link><description>拒绝花里胡哨</description><copyright>karond</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://karond-is-me.github.io/karond.github.io</link></image><lastBuildDate>Sun, 31 Mar 2024 13:01:40 +0000</lastBuildDate><managingEditor>karond</managingEditor><ttl>60</ttl><webMaster>karond</webMaster><item><title>我再测试一次</title><link>https://karond-is-me.github.io/karond.github.io/post/wo-zai-ce-shi-yi-ci.html</link><description>测试过啊。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/wo-zai-ce-shi-yi-ci.html</guid><pubDate>Sun, 31 Mar 2024 12:31:14 +0000</pubDate></item><item><title>测试啊</title><link>https://karond-is-me.github.io/karond.github.io/post/ce-shi-a.html</link><description>测试。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/ce-shi-a.html</guid><pubDate>Sun, 31 Mar 2024 05:34:14 +0000</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>karond</title><link>https://karond-is-me.github.io/karond.github.io</link><description>拒绝花里胡哨</description><copyright>karond</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://karond-is-me.github.io/karond.github.io</link></image><lastBuildDate>Thu, 04 Apr 2024 13:44:48 +0000</lastBuildDate><managingEditor>karond</managingEditor><ttl>60</ttl><webMaster>karond</webMaster><item><title>解决rustup安装和更新Rust过慢的问题</title><link>https://karond-is-me.github.io/karond.github.io/post/jie-jue-rustup-an-zhuang-he-geng-xin-Rust-guo-man-de-wen-ti.html</link><description>国内连接默认的镜像速度过慢，建议安装过的没安装过的都设置一次！！&#13;
+步骤一：设置 Rustup 镜像， 修改配置 ~/.zshrc or ~/.bashrc&#13;
+``` bash&#13;
+export RUSTUP_DIST_SERVER="https://rsproxy.cn"&#13;
+export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"&#13;
+```&#13;
+步骤二：安装 Rust 或更新Rust&#13;
+``` bash&#13;
+#安装&#13;
+curl --proto '=https' --tlsv1.2 -sSf https://rsproxy.cn/rustup-init.sh | sh&#13;
+#更新&#13;
+rustup self update&#13;
+rustup update stable&#13;
+```&#13;
+步骤三：设置 crates.io 镜像， 修改配置 ~/.cargo/config，已支持git协议和sparse协议，&gt;=1.68 版本建议使用 sparse-index，速度更快。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/jie-jue-rustup-an-zhuang-he-geng-xin-Rust-guo-man-de-wen-ti.html</guid><pubDate>Thu, 04 Apr 2024 13:35:44 +0000</pubDate></item><item><title>我再测试一次</title><link>https://karond-is-me.github.io/karond.github.io/post/wo-zai-ce-shi-yi-ci.html</link><description>测试过啊。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/wo-zai-ce-shi-yi-ci.html</guid><pubDate>Sun, 31 Mar 2024 12:31:14 +0000</pubDate></item><item><title>测试啊</title><link>https://karond-is-me.github.io/karond.github.io/post/ce-shi-a.html</link><description>测试。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/ce-shi-a.html</guid><pubDate>Sun, 31 Mar 2024 05:34:14 +0000</pubDate></item></channel></rss>
