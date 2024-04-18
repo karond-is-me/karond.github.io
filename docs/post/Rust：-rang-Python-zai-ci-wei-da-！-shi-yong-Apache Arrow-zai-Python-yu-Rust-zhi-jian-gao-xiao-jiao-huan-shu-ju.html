@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://github.githubassets.com/favicons/favicon.svg"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="Rust：让Python再次伟大！使用Apache Arrow在Python与Rust之间高效交换数据">
+<title>Rust：让Python再次伟大！使用Apache Arrow在Python与Rust之间高效交换数据</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Rust：让Python再次伟大！使用Apache Arrow在Python与Rust之间高效交换数据</h1>
+<div class="title-right">
+    <a href="https://karond-is-me.github.io/karond.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/karond-is-me/karond.github.io/issues/5" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p>本篇中你将看到：</p>
+<ul>
+<li>使用pyarrow在Python和使用PyO3开发的Python模块间传递数据</li>
+</ul>
+<h1>Round2 使用Apache Arrow在Python和Rust代码之间飞速传输数据</h1>
+<h2>Apache Arrow</h2>
+<p>先让GPT来一段</p>
+<blockquote>
+<p>Apache Arrow 是一个开源软件项目，提供了一种跨语言和系统以高效且可互操作的方式处理大型数据集的标准方法。它提供了一组通用数据结构和序列化格式，使不同语言和工具可以轻松交换数据，而无需进行昂贵的转换或复制。</p>
+<p>Apache Arrow 的主要功能包括：</p>
+<p>内存中列式数据格式： Arrow 定义了一种内存中列式数据格式，称为 Arrow 格式。此格式优化了数据存储和处理，因为它将数据存储为按列组织的连续内存块，而不是按行组织。<br>
+跨语言支持： Arrow 为多种编程语言（包括 Python、Java、C++、R 和 Go）提供了绑定，使开发人员可以在不同的语言之间轻松交换数据。<br>
+高性能： Arrow 针对高性能进行了优化，它提供了高效的数据读取、写入和处理操作。<br>
+可扩展性： Arrow 是一个可扩展的框架，允许开发人员创建自定义数据类型和操作。</p>
+<p>Apache Arrow 在以下领域有广泛的应用：</p>
+<p>大数据分析： Arrow 可用于处理和分析大数据集，例如在数据仓库和数据湖中。<br>
+机器学习： Arrow 可用于高效地加载和处理机器学习模型所需的数据。<br>
+数据可视化： Arrow 可用于将数据快速加载到数据可视化工具中。<br>
+数据交换： Arrow 可用于在不同的系统和应用程序之间交换数据，而无需进行昂贵的转换。</p>
+<p>总体而言，Apache Arrow 是一个功能强大且易于使用的工具，可用于处理和交换大型数据集，从而简化数据分析和处理任务。</p>
+</blockquote>
+<p>总之，Apache Arrow是一种内存数据的组织形式，目的是为了在不同语言不同系统之间高效的传递数据，Apache Arrow 通过使用称为 零拷贝内存映射 的技术来实现 0 复制。也就是说，我们在Python和Rust代码之间只需要增加一点调用成本，没有数据传输成本！</p>
+<h2>准备工作</h2>
+<p>Python中我们选择的Apache Arrow实现为pyarrow，而在Rust中我们使用的是arrow-rs，首先将我们需要的包分别安装在我们的环境当中</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装pyarrow</span>
+pip install pyarrow
+<span class="pl-c"><span class="pl-c">#</span> 添加arrow包</span>
+cargo add arrow -F <span class="pl-s"><span class="pl-pds">"</span>pyarrow,pyo3<span class="pl-pds">"</span></span></pre></div>
+<h2>使用pyarrow传递数据</h2>
+<p>然后我们稍微修改一下我们的模块代码,首先用数组数据创建一个Array类型的一个引用，然后将这个Array类型类型转为我们实际的数据类型，最后我们故意使用for循环模拟一下只能使用循环解决问题的情况。</p>
+<div class="highlight highlight-source-rust"><pre class="notranslate"><span class="pl-k">use</span> std<span class="pl-kos">::</span>sync<span class="pl-kos">::</span><span class="pl-v">Arc</span><span class="pl-kos">;</span>
+
+<span class="pl-k">use</span> pyo3<span class="pl-kos">::</span>exceptions<span class="pl-kos">::</span><span class="pl-v">PyValueError</span><span class="pl-kos">;</span>
+<span class="pl-k">use</span> pyo3<span class="pl-kos">::</span>prelude<span class="pl-kos">::</span><span class="pl-c1">*</span><span class="pl-kos">;</span>
+<span class="pl-k">use</span>  arrow<span class="pl-kos">::</span>pyarrow<span class="pl-kos">::</span><span class="pl-v">PyArrowType</span><span class="pl-kos">;</span>
+<span class="pl-k">use</span>  arrow<span class="pl-kos">::</span>array<span class="pl-kos">::</span><span class="pl-kos">{</span><span class="pl-v">ArrayData</span><span class="pl-kos">,</span><span class="pl-v">Int64Array</span><span class="pl-kos">,</span><span class="pl-v">Array</span><span class="pl-kos">,</span>make_array<span class="pl-kos">}</span><span class="pl-kos">;</span>
+<span class="pl-c">/// Formats the sum of two numbers as string.</span>
+<span class="pl-c1">#<span class="pl-kos">[</span>pyfunction<span class="pl-kos">]</span></span>
+<span class="pl-k">fn</span> <span class="pl-en">sum_arrow_array</span><span class="pl-kos">(</span><span class="pl-s1">array</span><span class="pl-kos">:</span> <span class="pl-smi">PyArrowType</span><span class="pl-kos">&lt;</span><span class="pl-smi">ArrayData</span><span class="pl-kos">&gt;</span><span class="pl-kos">)</span> -&gt; <span class="pl-smi">PyResult</span><span class="pl-kos">&lt;</span><span class="pl-smi">i64</span><span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-k">let</span> array = array<span class="pl-kos">.</span><span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-k">let</span> array<span class="pl-kos">:</span> <span class="pl-smi">Arc</span><span class="pl-kos">&lt;</span><span class="pl-k">dyn</span> <span class="pl-smi">Array</span><span class="pl-kos">&gt;</span> = <span class="pl-en">make_array</span><span class="pl-kos">(</span>array<span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">let</span> array<span class="pl-kos">:</span> <span class="pl-c1">&amp;</span><span class="pl-smi">Int64Array</span> = array<span class="pl-kos">.</span><span class="pl-en">as_any</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">downcast_ref</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+        <span class="pl-kos">.</span><span class="pl-en">ok_or_else</span><span class="pl-kos">(</span>|| <span class="pl-smi">PyValueError</span><span class="pl-kos">::</span><span class="pl-en">new_err</span><span class="pl-kos">(</span><span class="pl-s">"expected int64 array"</span><span class="pl-kos">)</span><span class="pl-kos">)</span>?<span class="pl-kos">;</span>
+    <span class="pl-c">//let k:i64 = array.iter().fold(0, |acc, x| acc + x.unwrap());</span>
+    <span class="pl-k">let</span> <span class="pl-k">mut</span> k<span class="pl-kos">:</span><span class="pl-smi">i64</span> = <span class="pl-c1">0</span><span class="pl-kos">;</span>
+    <span class="pl-k">for</span> x <span class="pl-k">in</span> array<span class="pl-kos">.</span><span class="pl-en">iter</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">{</span>
+        k = k+ x<span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+    <span class="pl-v">Ok</span><span class="pl-kos">(</span>k<span class="pl-kos">)</span>
+<span class="pl-kos">}</span>
+
+<span class="pl-c">/// A Python module implemented in Rust.</span>
+<span class="pl-c1">#<span class="pl-kos">[</span>pymodule<span class="pl-kos">]</span></span>
+<span class="pl-k">fn</span> <span class="pl-en">mypym</span><span class="pl-kos">(</span><span class="pl-s1">_py</span><span class="pl-kos">:</span> <span class="pl-smi">Python</span><span class="pl-kos">,</span> <span class="pl-s1">m</span><span class="pl-kos">:</span> <span class="pl-c1">&amp;</span><span class="pl-smi">PyModule</span><span class="pl-kos">)</span> -&gt; <span class="pl-smi">PyResult</span><span class="pl-kos">&lt;</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+    m<span class="pl-kos">.</span><span class="pl-en">add_function</span><span class="pl-kos">(</span><span class="pl-en">wrap_pyfunction</span><span class="pl-en">!</span><span class="pl-kos">(</span>sum_arrow_array, m<span class="pl-kos">)</span>?<span class="pl-kos">)</span>?<span class="pl-kos">;</span>
+    <span class="pl-v">Ok</span><span class="pl-kos">(</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
+<span class="pl-kos">}</span>
+</pre></div>
+<h2>大功告成</h2>
+<p>最后我们在Python中尝试一下我们的加速器</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">mypym</span>
+<span class="pl-k">import</span> <span class="pl-s1">timeit</span>
+<span class="pl-k">import</span> <span class="pl-s1">pyarrow</span> <span class="pl-k">as</span> <span class="pl-s1">pa</span>
+<span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
+
+<span class="pl-c"># 生产一亿条测试数据</span>
+<span class="pl-s1">test_arr</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-s1">random</span>.<span class="pl-en">randint</span>(<span class="pl-c1">0</span>,<span class="pl-c1">1000</span>,<span class="pl-s1">size</span><span class="pl-c1">=</span><span class="pl-c1">100000000</span>,<span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s">'int64'</span>)
+
+<span class="pl-c"># 转为pyarrow格式</span>
+<span class="pl-s1">test_arr</span> <span class="pl-c1">=</span> <span class="pl-s1">pa</span>.<span class="pl-en">array</span>(<span class="pl-s1">test_arr</span>,<span class="pl-s1">type</span><span class="pl-c1">=</span><span class="pl-s">'int64'</span>)
+
+<span class="pl-c"># 测试一下，这都是0拷贝的，一眨眼~</span>
+<span class="pl-s1">t_start</span> <span class="pl-c1">=</span> <span class="pl-s1">timeit</span>.<span class="pl-en">default_timer</span>()
+<span class="pl-s1">mypym</span>.<span class="pl-en">sum_arrow_array</span>(<span class="pl-s1">test_arr</span>)
+<span class="pl-s1">chkt</span> <span class="pl-c1">=</span> <span class="pl-s1">timeit</span>.<span class="pl-en">default_timer</span>() <span class="pl-c1">-</span> <span class="pl-s1">t_start</span>
+<span class="pl-en">print</span>(<span class="pl-s1">chkt</span>)
+<span class="pl-c">#0.13071506191045046</span>
+
+<span class="pl-c"># 使用Python循环计算</span>
+<span class="pl-s1">t_start</span> <span class="pl-c1">=</span> <span class="pl-s1">timeit</span>.<span class="pl-en">default_timer</span>()
+<span class="pl-s1">k</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
+<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-s1">atest_arr</span>:
+    <span class="pl-s1">k</span> <span class="pl-c1">+=</span> <span class="pl-s1">i</span>.<span class="pl-en">as_py</span>()
+<span class="pl-s1">chkt</span> <span class="pl-c1">=</span> <span class="pl-s1">timeit</span>.<span class="pl-en">default_timer</span>() <span class="pl-c1">-</span> <span class="pl-s1">t_start</span>
+<span class="pl-en">print</span>(<span class="pl-s1">chkt</span>)
+<span class="pl-c">#33.00633535394445</span></pre></div>
+<h2>总结</h2>
+<p>简简单单单线程就将Python循环操作提升250倍！</p>
+<h2>号外</h2>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 使用pyarrow的sum方法</span>
+<span class="pl-s1">t_start</span> <span class="pl-c1">=</span> <span class="pl-s1">timeit</span>.<span class="pl-en">default_timer</span>()
+<span class="pl-s1">test_arr</span>.<span class="pl-en">sum</span>()
+<span class="pl-s1">chkt</span> <span class="pl-c1">=</span> <span class="pl-s1">timeit</span>.<span class="pl-en">default_timer</span>() <span class="pl-c1">-</span> <span class="pl-s1">t_start</span>
+<span class="pl-en">print</span>(<span class="pl-s1">chkt</span>)
+<span class="pl-c"># 0.05785635602660477</span></pre></div>
+<p>奉劝大家，像pyarrow这种流行的、基础的库，默认的方案大概率比自己实现的要强，只有遇到UDF(User-defined functions)这种难以优化的情形才考虑DIY。<br>
+下期对比两种方案处理数据的性能</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="https://karond-is-me.github.io/karond.github.io"> karond </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","karond-is-me/karond.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+
+</html>

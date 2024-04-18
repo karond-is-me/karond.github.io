@@ -1,5 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>karond</title><link>https://karond-is-me.github.io/karond.github.io</link><description>拒绝花里胡哨</description><copyright>karond</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://karond-is-me.github.io/karond.github.io</link></image><lastBuildDate>Wed, 17 Apr 2024 13:50:37 +0000</lastBuildDate><managingEditor>karond</managingEditor><ttl>60</ttl><webMaster>karond</webMaster><item><title>Rust：让Python再次伟大！使用PyO3创建Python模块</title><link>https://karond-is-me.github.io/karond.github.io/post/Rust%EF%BC%9A-rang-Python-zai-ci-wei-da-%EF%BC%81-shi-yong-PyO3-chuang-jian-Python-mo-kuai.html</link><description>本篇中你将看到：&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>karond</title><link>https://karond-is-me.github.io/karond.github.io</link><description>拒绝花里胡哨</description><copyright>karond</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://karond-is-me.github.io/karond.github.io</link></image><lastBuildDate>Thu, 18 Apr 2024 03:51:03 +0000</lastBuildDate><managingEditor>karond</managingEditor><ttl>60</ttl><webMaster>karond</webMaster><item><title>Rust：让Python再次伟大！使用Apache Arrow在Python与Rust之间高效交换数据</title><link>https://karond-is-me.github.io/karond.github.io/post/Rust%EF%BC%9A-rang-Python-zai-ci-wei-da-%EF%BC%81-shi-yong-Apache%20Arrow-zai-Python-yu-Rust-zhi-jian-gao-xiao-jiao-huan-shu-ju.html</link><description>本篇中你将看到：&#13;
+&#13;
+   - 使用pyarrow在Python和使用PyO3开发的Python模块间传递数据&#13;
+ &#13;
+# Round2 使用Apache Arrow在Python和Rust代码之间飞速传输数据&#13;
+&#13;
+## Apache Arrow&#13;
+先让GPT来一段&#13;
+&gt; Apache Arrow 是一个开源软件项目，提供了一种跨语言和系统以高效且可互操作的方式处理大型数据集的标准方法。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/Rust%EF%BC%9A-rang-Python-zai-ci-wei-da-%EF%BC%81-shi-yong-Apache%20Arrow-zai-Python-yu-Rust-zhi-jian-gao-xiao-jiao-huan-shu-ju.html</guid><pubDate>Wed, 17 Apr 2024 14:00:26 +0000</pubDate></item><item><title>Rust：让Python再次伟大！使用PyO3创建Python模块</title><link>https://karond-is-me.github.io/karond.github.io/post/Rust%EF%BC%9A-rang-Python-zai-ci-wei-da-%EF%BC%81-shi-yong-PyO3-chuang-jian-Python-mo-kuai.html</link><description>本篇中你将看到：&#13;
 - 从零使用PyO3创建一个Python模块&#13;
 &#13;
 &#13;
