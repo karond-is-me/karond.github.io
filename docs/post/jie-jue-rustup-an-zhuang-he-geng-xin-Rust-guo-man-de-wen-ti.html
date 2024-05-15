@@ -9,7 +9,40 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="解决rustup安装和更新Rust过慢的问题">
+<meta name="description" content="国内连接默认的镜像速度过慢，建议安装过的没安装过的都设置一次！！
+步骤一：设置 Rustup 镜像， 修改配置 ~/.zshrc or ~/.bashrc
+``` bash
+export RUSTUP_DIST_SERVER="https://rsproxy.cn"
+export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
+```
+步骤二：安装 Rust 或更新Rust
+``` bash
+#安装
+curl --proto '=https' --tlsv1.2 -sSf https://rsproxy.cn/rustup-init.sh | sh
+#更新
+rustup self update
+rustup update stable
+```
+步骤三：设置 crates.io 镜像， 修改配置 ~/.cargo/config，已支持git协议和sparse协议，>=1.68 版本建议使用 sparse-index，速度更快。">
+<meta property="og:title" content="解决rustup安装和更新Rust过慢的问题">
+<meta property="og:description" content="国内连接默认的镜像速度过慢，建议安装过的没安装过的都设置一次！！
+步骤一：设置 Rustup 镜像， 修改配置 ~/.zshrc or ~/.bashrc
+``` bash
+export RUSTUP_DIST_SERVER="https://rsproxy.cn"
+export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
+```
+步骤二：安装 Rust 或更新Rust
+``` bash
+#安装
+curl --proto '=https' --tlsv1.2 -sSf https://rsproxy.cn/rustup-init.sh | sh
+#更新
+rustup self update
+rustup update stable
+```
+步骤三：设置 crates.io 镜像， 修改配置 ~/.cargo/config，已支持git协议和sparse协议，>=1.68 版本建议使用 sparse-index，速度更快。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://karond-is-me.github.io/karond.github.io/post/jie-jue-rustup-an-zhuang-he-geng-xin-Rust-guo-man-de-wen-ti.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>解决rustup安装和更新Rust过慢的问题</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 

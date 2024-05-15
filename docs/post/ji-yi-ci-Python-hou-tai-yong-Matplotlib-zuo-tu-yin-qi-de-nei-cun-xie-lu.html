@@ -9,7 +9,16 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="记一次Python后台用Matplotlib作图引起的内存泄露">
+<meta name="description" content="# 缘起
+
+今天公司的顾问写了一段Python用于大量作图并保存在本地，但是运行了一段时间后出现快速的内存泄露，本文还原内存泄露发现的过程。">
+<meta property="og:title" content="记一次Python后台用Matplotlib作图引起的内存泄露">
+<meta property="og:description" content="# 缘起
+
+今天公司的顾问写了一段Python用于大量作图并保存在本地，但是运行了一段时间后出现快速的内存泄露，本文还原内存泄露发现的过程。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://karond-is-me.github.io/karond.github.io/post/ji-yi-ci-Python-hou-tai-yong-Matplotlib-zuo-tu-yin-qi-de-nei-cun-xie-lu.html">
+<meta property="og:image" content="https://github.githubassets.com/favicons/favicon.svg">
 <title>记一次Python后台用Matplotlib作图引起的内存泄露</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
