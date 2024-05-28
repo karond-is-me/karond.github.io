@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>karond</title><link>https://karond-is-me.github.io/karond.github.io</link><description>拒绝花里胡哨</description><copyright>karond</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://karond-is-me.github.io/karond.github.io</link></image><lastBuildDate>Fri, 26 Apr 2024 12:14:32 +0000</lastBuildDate><managingEditor>karond</managingEditor><ttl>60</ttl><webMaster>karond</webMaster><item><title>记一次Python后台用Matplotlib作图引起的内存泄露</title><link>https://karond-is-me.github.io/karond.github.io/post/ji-yi-ci-Python-hou-tai-yong-Matplotlib-zuo-tu-yin-qi-de-nei-cun-xie-lu.html</link><description># 缘起&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>karond</title><link>https://karond-is-me.github.io/karond.github.io</link><description>拒绝花里胡哨</description><copyright>karond</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://github.githubassets.com/favicons/favicon.svg</url><title>avatar</title><link>https://karond-is-me.github.io/karond.github.io</link></image><lastBuildDate>Tue, 28 May 2024 16:05:25 +0000</lastBuildDate><managingEditor>karond</managingEditor><ttl>60</ttl><webMaster>karond</webMaster><item><title>记一次Python后台用Matplotlib作图引起的内存泄露</title><link>https://karond-is-me.github.io/karond.github.io/post/ji-yi-ci-Python-hou-tai-yong-Matplotlib-zuo-tu-yin-qi-de-nei-cun-xie-lu.html</link><description># 缘起&#13;
 &#13;
 今天公司的顾问写了一段Python用于大量作图并保存在本地，但是运行了一段时间后出现快速的内存泄露，本文还原内存泄露发现的过程。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/ji-yi-ci-Python-hou-tai-yong-Matplotlib-zuo-tu-yin-qi-de-nei-cun-xie-lu.html</guid><pubDate>Thu, 25 Apr 2024 13:33:02 +0000</pubDate></item><item><title>Rust：让Python再次伟大！使用Apache Arrow在Python与Rust之间高效交换数据</title><link>https://karond-is-me.github.io/karond.github.io/post/Rust%EF%BC%9A-rang-Python-zai-ci-wei-da-%EF%BC%81-shi-yong-Apache%20Arrow-zai-Python-yu-Rust-zhi-jian-gao-xiao-jiao-huan-shu-ju.html</link><description>本篇中你将看到：&#13;
 &#13;
@@ -90,7 +90,7 @@ Installing collected packages: mypym&#13;
 Successfully installed mypym-0.1.0&#13;
 (base) karond:~/code/rust/mypym$ python&#13;
 Python 3.12.1 | packaged by Anaconda, Inc. | (main, Jan 19 2024, 15:51:05) [GCC 11.2.0] on linux&#13;
-Type "help", "copyright", "credits" or "license" for more information.&#13;
+Type 'help', 'copyright', 'credits' or 'license' for more information.&#13;
 &gt;&gt;&gt; import mypym&#13;
 &gt;&gt;&gt; mypym.&#13;
 mypym.mypym           mypym.sum_as_string(&#13;
@@ -101,8 +101,8 @@ mypym.mypym           mypym.sum_as_string(&#13;
 创建第一Rust语言的Python模块就是这么简单。</description><guid isPermaLink="true">https://karond-is-me.github.io/karond.github.io/post/Rust%EF%BC%9A-rang-Python-zai-ci-wei-da-%EF%BC%81-shi-yong-PyO3-chuang-jian-Python-mo-kuai.html</guid><pubDate>Wed, 17 Apr 2024 13:27:37 +0000</pubDate></item><item><title>解决rustup安装和更新Rust过慢的问题</title><link>https://karond-is-me.github.io/karond.github.io/post/jie-jue-rustup-an-zhuang-he-geng-xin-Rust-guo-man-de-wen-ti.html</link><description>国内连接默认的镜像速度过慢，建议安装过的没安装过的都设置一次！！&#13;
 步骤一：设置 Rustup 镜像， 修改配置 ~/.zshrc or ~/.bashrc&#13;
 ``` bash&#13;
-export RUSTUP_DIST_SERVER="https://rsproxy.cn"&#13;
-export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"&#13;
+export RUSTUP_DIST_SERVER='https://rsproxy.cn'&#13;
+export RUSTUP_UPDATE_ROOT='https://rsproxy.cn/rustup'&#13;
 ```&#13;
 步骤二：安装 Rust 或更新Rust&#13;
 ``` bash&#13;
